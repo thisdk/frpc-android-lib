@@ -24,8 +24,8 @@ jobs:
         go install golang.org/x/mobile/cmd/gomobile@latest
         git clone https://github.com/fatedier/frp $(go env GOPATH)/src/github.com/fatedier/frp
         cd $(go env GOPATH)/src/github.com/fatedier/frp
-        wget https://raw.githubusercontent.com/thisdk/github-server/main/main.go -O cmd/frpc/sub/root.go
-        wget https://raw.githubusercontent.com/thisdk/github-server/main/root.go -O cmd/frpc/main.go
+        wget https://raw.githubusercontent.com/thisdk/frpc-android-lib/main/main.go -O cmd/frpc/sub/root.go
+        wget https://raw.githubusercontent.com/thisdk/frpc-android-lib/main/root.go -O cmd/frpc/main.go
         go get golang.org/x/mobile/cmd/gobind
         go mod download
         gomobile init
