@@ -1,0 +1,36 @@
+name: Frpc Android Lib Build
+on:
+  watch:
+    types: started
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: 11
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v2
+    - name: Setup Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.19
+    - name: Config And Build
+      run: |
+        export ANDROID_NDK_HOME=/usr/local/lib/android/sdk/ndk/23.2.8568313
+        go install golang.org/x/mobile/cmd/gomobile@latest
+        git clone https://github.com/fatedier/frp $(go env GOPATH)/src/github.com/fatedier/frp
+        cd $(go env GOPATH)/src/github.com/fatedier/frp
+        wget https://raw.githubusercontent.com/thisdk/github-server/main/main.go -O cmd/frpc/sub/root.go
+        wget https://raw.githubusercontent.com/thisdk/github-server/main/root.go -O cmd/frpc/main.go
+        go get golang.org/x/mobile/cmd/gobind
+        go mod download
+        gomobile init
+        gomobile bind -target=android ./cmd/frpc
+    - uses: actions/upload-artifact@v3
+      with:
+        name: frpc-android-lib
+        path: /home/runner/go/src/github.com/fatedier/frp/sub.aar
